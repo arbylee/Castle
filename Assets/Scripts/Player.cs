@@ -7,8 +7,8 @@ public class Player : MonoBehaviour {
 	public float gravity = 20.0F;
 	public enum RotationAxes { MouseXAndY = 0, MouseX = 1, MouseY = 2 }
 	public RotationAxes axes = RotationAxes.MouseXAndY;
-	public float sensitivityX = 6F;
-	public float sensitivityY = 6F;
+	public float sensitivityX = 4F;
+	public float sensitivityY = 4F;
 
 	public float minimumX = -360F;
 	public float maximumX = 360F;
@@ -16,9 +16,17 @@ public class Player : MonoBehaviour {
 	public float minimumY = -60F;
 	public float maximumY = 60F;
 
+	public GameObject bulletPrefab;
+
 	float rotationY = 0F;
 
 	private Vector3 moveDirection = Vector3.zero;
+	private Transform gunTransform;
+	void Start() {
+		Transform playerModel = transform.Find ("PlayerModel");
+		gunTransform = playerModel.Find ("Gun");
+	}
+
 	void Update() {
 		if (axes == RotationAxes.MouseXAndY)
 		{
@@ -53,5 +61,12 @@ public class Player : MonoBehaviour {
 		}
 		moveDirection.y -= gravity * Time.deltaTime;
 		controller.Move(moveDirection * Time.deltaTime);
+
+		if(Input.GetButtonDown("Fire1")){
+			Debug.Log (gunTransform);
+			GameObject bullet = Instantiate (bulletPrefab, gunTransform.position, gunTransform.rotation) as GameObject;
+			Rigidbody bulletRB = bullet.GetComponentInChildren<Rigidbody> ();
+			bulletRB.AddForce (gunTransform.forward * 4000);
+		}
 	}
 }
