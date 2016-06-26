@@ -3,13 +3,17 @@ using System.Collections;
 
 public class NonAttackingState : IPlayerAttackState {
 	private readonly Player player;
+	private float reloadTime = 0.5f;
+	private float reloadTimeLeft = 0f;
 
 	public NonAttackingState(Player thePlayer){
 		player = thePlayer;
 	}
 	public void UpdateState(){
-		if (Input.GetButtonDown ("Fire1")) {
+		reloadTimeLeft -= Time.deltaTime;
+		if (reloadTimeLeft <= 0 && Input.GetButtonDown ("Fire1")) {
 			ToAttackChargingState ();
+			reloadTimeLeft = reloadTime;
 		}
 	}
 	public void ToAttackChargingState (){
