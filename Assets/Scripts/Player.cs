@@ -63,10 +63,9 @@ public class Player : MonoBehaviour {
 		controller.Move(moveDirection * Time.deltaTime);
 
 		if(Input.GetButtonDown("Fire1")){
-			Debug.Log (gunTransform);
 			GameObject bullet = Instantiate (bulletPrefab, gunTransform.position, gunTransform.rotation) as GameObject;
 			Rigidbody bulletRB = bullet.GetComponentInChildren<Rigidbody> ();
-			bulletRB.AddForce (gunTransform.forward * 4000);
+			bulletRB.AddForce (gunTransform.forward * 80);
 		}
 	}
 }
