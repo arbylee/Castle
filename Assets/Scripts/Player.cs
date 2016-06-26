@@ -32,6 +32,8 @@ public class Player : MonoBehaviour {
 			Instance = this;
 		}
 
+		Cursor.visible = false;
+		Cursor.lockState = CursorLockMode.Locked;
 		attackChargingState = new AttackChargingState (Instance);
 		nonAttackingState = new NonAttackingState (Instance);
 		currentAttackState = nonAttackingState;
