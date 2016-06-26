@@ -2,6 +2,8 @@
 using System.Collections;
 
 public class Player : MonoBehaviour {
+	public static Player Instance { get; private set; }
+
 	public float speed = 6.0F;
 	public float jumpSpeed = 8.0F;
 	public float gravity = 20.0F;
@@ -9,19 +11,32 @@ public class Player : MonoBehaviour {
 	public RotationAxes axes = RotationAxes.MouseXAndY;
 	public float sensitivityX = 4F;
 	public float sensitivityY = 4F;
-
 	public float minimumX = -360F;
 	public float maximumX = 360F;
-
 	public float minimumY = -60F;
 	public float maximumY = 60F;
+	float rotationY = 0F;
+	private Vector3 moveDirection = Vector3.zero;
 
 	public GameObject bulletPrefab;
-
-	float rotationY = 0F;
-
-	private Vector3 moveDirection = Vector3.zero;
 	private Transform gunTransform;
+	[HideInInspector] public float force;
+	[HideInInspector] public IPlayerAttackState currentAttackState;
+	[HideInInspector] public AttackChargingState attackChargingState;
+	[HideInInspector] public NonAttackingState nonAttackingState;
+
+	void Awake(){
+		if (Instance != null && Instance != this) {
+			Destroy (gameObject);
+		} else {
+			Instance = this;
+		}
+
+		attackChargingState = new AttackChargingState (Instance);
+		nonAttackingState = new NonAttackingState (Instance);
+		currentAttackState = nonAttackingState;
+	}
+
 	void Start() {
 		Transform playerModel = transform.Find ("PlayerModel");
 		gunTransform = playerModel.Find ("Gun");
@@ -62,10 +77,14 @@ public class Player : MonoBehaviour {
 		moveDirection.y -= gravity * Time.deltaTime;
 		controller.Move(moveDirection * Time.deltaTime);
 
-		if(Input.GetButtonDown("Fire1")){
-			GameObject bullet = Instantiate (bulletPrefab, gunTransform.position, gunTransform.rotation) as GameObject;
-			Rigidbody bulletRB = bullet.GetComponentInChildren<Rigidbody> ();
-			bulletRB.AddForce (gunTransform.forward * 80);
-		}
+		currentAttackState.UpdateState ();
+	}
+
+	public void ReleaseArrow(){
+		GameObject bullet = Instantiate (bulletPrefab, gunTransform.position, gunTransform.rotation) as GameObject;
+		Rigidbody bulletRB = bullet.GetComponentInChildren<Rigidbody> ();
+		bulletRB.AddForce (gunTransform.forward * force);
+		force = 0;
+		bulletRB = null;
 	}
 }
