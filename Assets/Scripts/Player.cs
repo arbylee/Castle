@@ -19,6 +19,7 @@ public class Player : MonoBehaviour {
 	private Vector3 moveDirection = Vector3.zero;
 
 	public GameObject bulletPrefab;
+	public Animator crosshairAnimator;
 	private Transform gunTransform;
 	[HideInInspector] public float force;
 	[HideInInspector] public IPlayerAttackState currentAttackState;
