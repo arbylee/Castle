@@ -11,7 +11,7 @@ public class NonAttackingState : IPlayerAttackState {
 	}
 	public void UpdateState(){
 		reloadTimeLeft -= Time.deltaTime;
-		if (reloadTimeLeft <= 0 && Input.GetButtonDown ("Fire1")) {
+		if (reloadTimeLeft <= 0 && Input.GetButton ("Fire1")) {
 			ToAttackChargingState ();
 			reloadTimeLeft = reloadTime;
 		}
