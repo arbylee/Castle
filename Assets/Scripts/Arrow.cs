@@ -18,7 +18,8 @@ public class Arrow : MonoBehaviour {
 	void OnTriggerEnter (Collider other) {
 		GameObject hitTarget = other.gameObject;
 		if (hitTarget.CompareTag ("Enemy")) {
-			Destroy(hitTarget.gameObject);
+			Enemy enemy = hitTarget.GetComponentInParent<Enemy> ();
+			Destroy (enemy.gameObject);
 			Instantiate (explosion, hitTarget.transform.position, Quaternion.identity);
 		} else {
 			this.transform.parent = other.gameObject.transform;
